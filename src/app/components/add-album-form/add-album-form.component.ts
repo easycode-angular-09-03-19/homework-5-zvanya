@@ -27,20 +27,20 @@ export class AddAlbumFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.albumEvents.albumCancelEditEventObservableSubject.subscribe(() => {
+      this.editMode = false;
+      this.albumTitleSrc = '';
+      this.isAlbumTitleChanged = false;
+      this.form.resetForm();
+    });
     
     this.albumEvents.albumEditEventObservableSubject.subscribe((album: Album) => {
-      if (album.id !== -1) {
+      if (album.title) {
         this.album.id = album.id;
         this.editMode = true;
         this.album.title = album.title;
         this.albumTitleSrc = album.title;
         this.isAlbumTitleChanged = false;
-      } else {
-        this.album.id = -1;
-        this.editMode = false;
-        this.albumTitleSrc = '';
-        this.isAlbumTitleChanged = false;
-        this.form.resetForm();
       }
     });
   }
@@ -51,39 +51,45 @@ export class AddAlbumFormComponent implements OnInit {
     }
   }
   
-  onFormSubmit() {
+  onFormAddAlbum() {
     const newAlbum = {
       id: this.album.id,
       userId: 1,
       title: this.album.title
     };
+  
+    this.albumService.addNewAlbum(newAlbum).subscribe((data: Album) => {
+      this.albumEvents.emitAddNewAlbum(data);
+      this.form.resetForm();
     
-    if (this.album.id === -1) {
-      this.albumService.addNewAlbum(newAlbum).subscribe((data: Album) => {
-        this.albumEvents.emitAddNewAlbum(data);
-        this.form.resetForm();
-  
-        this.alertMessageService.emitSuccessMessage({
-          title: `Добавление`,
-          text: `Добавлен альбом ${data.id}`
-        });
+      this.alertMessageService.emitSuccessMessage({
+        title: `Добавление`,
+        text: `Добавлен альбом ${data.id}`
       });
-    } else {
-      this.albumService.editAlbum(newAlbum).subscribe((data: Album) => {
-        this.albumEvents.emitUpdatedAlbum(data);
-        this.album.id = -1;
-        this.form.resetForm();
+    });
+  }
   
-        this.alertMessageService.emitSuccessMessage({
-          title: `Изменение`,
-          text: `Изменен альбом ${data.id}`
-        });
-      }, (err) => {
-        this.alertMessageService.emitDangerMessage({
-          title: `Ошибка изменения`,
-          text: err.message
-        });
+  onFormEditAlbum() {
+    const newAlbum = {
+      id: this.album.id,
+      userId: 1,
+      title: this.album.title
+    };
+  
+    this.albumService.editAlbum(newAlbum).subscribe((data: Album) => {
+      this.albumEvents.emitUpdatedAlbum(data);
+      this.editMode = false;
+      this.form.resetForm();
+    
+      this.alertMessageService.emitSuccessMessage({
+        title: `Изменение`,
+        text: `Изменен альбом ${data.id}`
       });
-    }
+    }, (err) => {
+      this.alertMessageService.emitDangerMessage({
+        title: `Ошибка изменения`,
+        text: err.message
+      });
+    });
   }
 }

@@ -11,7 +11,6 @@ import { AlertMessageService } from "../../services/alert-message.service";
 })
 export class AlbumItemComponent implements OnInit {
   editMode = false;
-  editClass = 'primary';
   
   @Input() item: Album;
   constructor(
@@ -24,27 +23,24 @@ export class AlbumItemComponent implements OnInit {
     this.albumEvents.albumEditEventObservableSubject.subscribe((album: Album) => {
       if (this.item.id !== album.id) {
         this.editMode = false;
-        this.editClass = 'primary';
       }
     });
     
     this.albumEvents.albumUpdatedEventObservableSubject.subscribe((album: Album) => {
       if (this.item.id === album.id) {
         this.editMode = false;
-        this.editClass = 'primary';
       }
     });
   }
   
   editAlbum() {
-    this.editMode = !this.editMode;
-    if (this.editMode) {
-      this.editClass = 'dark';
-      this.albumEvents.emitEditAlbum(this.item);
-    } else {
-      this.editClass = 'primary';
-      this.albumEvents.emitEditAlbum({id: -1, title: '', userId: 0});
-    }
+    this.editMode = true;
+    this.albumEvents.emitEditAlbum(this.item);
+  }
+  
+  cancelEditAlbum() {
+    this.editMode = false;
+    this.albumEvents.emitCancelEditAlbum();
   }
   
   deleteAlbum() {

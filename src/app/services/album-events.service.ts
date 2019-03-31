@@ -15,6 +15,9 @@ export class AlbumEventsService {
   private albumEditEventSource = new BehaviorSubject<Album>({id: -1, title: '', userId: 0});
   public  albumEditEventObservableSubject = this.albumEditEventSource.asObservable();
 
+  private albumCancelEditEventSource = new BehaviorSubject(0);
+  public  albumCancelEditEventObservableSubject = this.albumCancelEditEventSource.asObservable();
+
   private albumUpdatedEventSource = new BehaviorSubject({});
   public  albumUpdatedEventObservableSubject = this.albumUpdatedEventSource.asObservable();
 
@@ -30,6 +33,10 @@ export class AlbumEventsService {
   
   emitEditAlbum(album: Album) {
     this.albumEditEventSource.next(album);
+  }
+  
+  emitCancelEditAlbum() {
+    this.albumCancelEditEventSource.next(0);
   }
   
   emitUpdatedAlbum(album: Album) {

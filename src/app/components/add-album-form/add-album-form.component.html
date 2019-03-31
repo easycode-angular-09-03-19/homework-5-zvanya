@@ -3,11 +3,11 @@
     <div class="col col-8 mx-auto">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">{{ album.id !== -1 ? 'Edit album. id: ' + album.id : 'Add new album'}}</h5>
-          <ng-container *ngIf="album.id !== -1">
+          <h5 class="card-title">{{ editMode ? 'Edit album. id: ' + album.id : 'Add new album'}}</h5>
+          <ng-container *ngIf="editMode">
             <p><b>Old album title:</b> {{ albumTitleSrc }}</p>
           </ng-container>
-          <form (ngSubmit)="onFormSubmit()" #addAlbumForm="ngForm">
+          <form #addAlbumForm="ngForm">
             <div class="alert alert-danger" *ngIf="albumTitle.invalid && albumTitle.dirty">Error message</div>
 
             <input type="text"
@@ -21,7 +21,23 @@
                    minlength="2"
                    (keyup)="onKeyUpTitleInput()"
             >
-            <button class="btn btn-success mt-3" [disabled]="albumTitle.invalid || (album.id !== -1 && !isAlbumTitleChanged)">{{ album.id !== -1 ? 'Save' : 'Submit'}}</button>
+            <button type="submit"
+                    class="btn btn-primary mt-3"
+                    (click)="onFormEditAlbum()"
+                    *ngIf="editMode; else ifAddMode"
+                    [disabled]="albumTitle.invalid || (editMode && !isAlbumTitleChanged)"
+            >
+              Save
+            </button>
+            <ng-template #ifAddMode>
+              <button type="submit"
+                      class="btn btn-success mt-3"
+                      (click)="onFormAddAlbum()"
+                      [disabled]="albumTitle.invalid"
+              >
+                Submit
+              </button>
+            </ng-template>
           </form>
         </div>
       </div>
