@@ -1,0 +1,46 @@
+<div class="container sticky-top pt-3">
+  <div class="row">
+    <div class="col col-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-body">
+          <h5 class="card-title">{{ editMode ? 'Edit album. id: ' + album.id : 'Add new album'}}</h5>
+          <ng-container *ngIf="editMode">
+            <p><b>Old album title:</b> {{ albumTitleSrc }}</p>
+          </ng-container>
+          <form #addAlbumForm="ngForm">
+            <div class="alert alert-danger" *ngIf="albumTitle.invalid && albumTitle.dirty">Error message</div>
+
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="album.title"
+                   name="title"
+                   placeholder="Album title"
+                   #albumTitle="ngModel"
+                   required
+                   maxlength="100"
+                   minlength="2"
+                   (keyup)="onKeyUpTitleInput()"
+            >
+            <button type="submit"
+                    class="btn btn-primary mt-3"
+                    (click)="onFormEditAlbum()"
+                    *ngIf="editMode; else ifAddMode"
+                    [disabled]="albumTitle.invalid || (editMode && !isAlbumTitleChanged)"
+            >
+              Save
+            </button>
+            <ng-template #ifAddMode>
+              <button type="submit"
+                      class="btn btn-success mt-3"
+                      (click)="onFormAddAlbum()"
+                      [disabled]="albumTitle.invalid"
+              >
+                Submit
+              </button>
+            </ng-template>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

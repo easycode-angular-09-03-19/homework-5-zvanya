@@ -1,0 +1,11 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">User id: {{ item.id }}</h5>
+    <p class="card-text">Title: {{ item.title }}</p>
+    <button class="btn btn-dark" *ngIf="editMode; else ifAddMode" (click)="cancelEditAlbum()">Cancel</button>
+    <ng-template #ifAddMode>
+      <button class="btn btn-primary" (click)="editAlbum()">Edit</button>
+    </ng-template>
+    <button class="btn btn-danger ml-2" [class.btn-outline-danger]="editMode" (click)="deleteAlbum()" [disabled]="editMode">Delete</button>
+  </div>
+</div>
