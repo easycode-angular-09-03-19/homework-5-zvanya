@@ -22,7 +22,6 @@ export class AlbumsListComponent implements OnInit {
     }, (err) => {
       console.log(err);
     }, () => {
-      console.log('complete');
     });
 
     this.albumEvents.albumAddEventObservableSubject.subscribe((data: Album) => {
@@ -43,7 +42,7 @@ export class AlbumsListComponent implements OnInit {
     });
   
     this.albumEvents.albumUpdatedEventObservableSubject.subscribe((album: Album) => {
-      if (album.id) {
+      if (album.title) {
         this.albums.map((item) => {
           if (album.id === item.id) {
             item.title = album.title;

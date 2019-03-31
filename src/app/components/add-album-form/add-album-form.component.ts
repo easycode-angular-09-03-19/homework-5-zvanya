@@ -15,6 +15,10 @@ export class AddAlbumFormComponent implements OnInit {
     id: -1,
     title: ''
   };
+  editMode = false;
+  albumTitleSrc = '';
+  isAlbumTitleChanged = false;
+  
   @ViewChild('addAlbumForm') form: NgForm;
   constructor(
     public albumService: AlbumsService,
@@ -27,14 +31,26 @@ export class AddAlbumFormComponent implements OnInit {
     this.albumEvents.albumEditEventObservableSubject.subscribe((album: Album) => {
       if (album.id !== -1) {
         this.album.id = album.id;
+        this.editMode = true;
         this.album.title = album.title;
+        this.albumTitleSrc = album.title;
+        this.isAlbumTitleChanged = false;
       } else {
         this.album.id = -1;
+        this.editMode = false;
+        this.albumTitleSrc = '';
+        this.isAlbumTitleChanged = false;
         this.form.resetForm();
       }
     });
-    
   }
+  
+  onKeyUpTitleInput() {
+    if (this.album.id !== -1) {
+      this.isAlbumTitleChanged = this.album.title !== this.albumTitleSrc;
+    }
+  }
+  
   onFormSubmit() {
     const newAlbum = {
       id: this.album.id,
@@ -64,7 +80,7 @@ export class AddAlbumFormComponent implements OnInit {
         });
       }, (err) => {
         this.alertMessageService.emitDangerMessage({
-          title: `Ошибка удаления`,
+          title: `Ошибка изменения`,
           text: err.message
         });
       });
