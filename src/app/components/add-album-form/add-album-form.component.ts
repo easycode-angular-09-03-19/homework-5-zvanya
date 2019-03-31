@@ -46,7 +46,7 @@ export class AddAlbumFormComponent implements OnInit {
   }
   
   onKeyUpTitleInput() {
-    if (this.album.id !== -1) {
+    if (this.editMode) {
       this.isAlbumTitleChanged = this.album.title !== this.albumTitleSrc;
     }
   }
