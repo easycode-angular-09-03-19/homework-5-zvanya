@@ -3,7 +3,7 @@ import { AlbumsService } from "../../services/albums.service";
 import { AlbumEventsService } from "../../services/album-events.service";
 import { Album } from "../../interfaces/Album";
 import { NgForm } from "@angular/forms";
-import {AlertMessageService} from "../../services/alert-message.service";
+import { AlertMessageService } from "../../services/alert-message.service";
 
 @Component({
   selector: 'app-add-album-form',
@@ -47,10 +47,9 @@ export class AddAlbumFormComponent implements OnInit {
         this.albumEvents.emitAddNewAlbum(data);
         this.form.resetForm();
   
-        this.alertMessageService.emitAlertMessage({
-          object: 'album',
-          item: data,
-          type: 'add'
+        this.alertMessageService.emitSuccessMessage({
+          title: `Добавление`,
+          text: `Добавлен альбом ${data.id}`
         });
       });
     } else {
@@ -59,15 +58,14 @@ export class AddAlbumFormComponent implements OnInit {
         this.album.id = -1;
         this.form.resetForm();
   
-        this.alertMessageService.emitAlertMessage({
-          object: 'album',
-          item: data,
-          type: 'edit'
+        this.alertMessageService.emitSuccessMessage({
+          title: `Изменение`,
+          text: `Изменен альбом ${data.id}`
         });
       }, (err) => {
-        this.alertMessageService.emitAlertMessage({
-          object: 'error',
-          item: err.message
+        this.alertMessageService.emitDangerMessage({
+          title: `Ошибка удаления`,
+          text: err.message
         });
       });
     }

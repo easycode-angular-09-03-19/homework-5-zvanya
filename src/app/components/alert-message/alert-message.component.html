@@ -1,6 +1,8 @@
 <ng-container *ngIf="visible">
-  <div class="alert alert-{{class}} text-center"
-       style="position: fixed; top: 10px; right: 10px; width: 500px; height: 100px">
-    {{ message }}
+  <div class="alert alert-{{class}} mt-3"
+       role="alert"
+       style="position: fixed; right: 10px; width: 500px">
+    <h4 class="alert-heading">{{ messageTitle }}</h4>
+    <p>{{ messageText }}</p>
   </div>
 </ng-container>

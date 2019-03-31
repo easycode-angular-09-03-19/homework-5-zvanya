@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Album } from "../../interfaces/Album";
+import { IMessage } from "../../interfaces/IMessage";
 import { AlertMessageService } from "../../services/alert-message.service";
 
 @Component({
@@ -10,49 +10,48 @@ import { AlertMessageService } from "../../services/alert-message.service";
 export class AlertMessageComponent implements OnInit {
   visible = false;
   class = 'success';
-  message = '';
+  messageText = '';
+  messageTitle = '';
   
   constructor(
     public alertMessageService: AlertMessageService
   ) { }
 
   ngOnInit() {
-    this.alertMessageService.alertMessageEventObservableSubject.subscribe((value: any) => {
-      if (value.object) {
-        this.showMessage(value);
+    this.alertMessageService.successMessageEventObservableSubject.subscribe((value: IMessage) => {
+      if (value.title) {
+        this.showSuccessMessage(value);
         setTimeout(() => {
           this.visible = false;
+          this.messageText = '';
+          this.messageTitle = '';
+        }, 5000);
+      }
+    });
+
+    this.alertMessageService.dangerMessageEventObservableSubject.subscribe((value: IMessage) => {
+      if (value.title) {
+        this.showDangerMessage(value);
+        setTimeout(() => {
+          this.visible = false;
+          this.messageText = '';
+          this.messageTitle = '';
         }, 5000);
       }
     });
   }
 
-  private showMessage(value: any) {
+  private showSuccessMessage(value: IMessage) {
     this.visible = true;
-    switch (value.object) {
-      case "album":
-        switch (value.type) {
-          case "delete":
-            this.class = 'danger';
-            this.message = `Удален альбом ${value.item.id}`;
-            break;
-          case "add":
-            this.class = 'success';
-            this.message = `Добавлен альбом ${value.item.id}`;
-            break;
-          case "edit":
-            this.class = 'info';
-            this.message = `Обновлен альбом ${value.item.id}`;
-            break;
-          default:
-        }
-        break;
-      case "error":
-        this.class = 'danger';
-        this.message = value.item;
-        break;
-      default:
-    }
+    this.class = 'success';
+    this.messageTitle = value.title;
+    this.messageText = value.text;
   }
   
+  private showDangerMessage(value: IMessage) {
+    this.visible = true;
+    this.class = 'danger';
+    this.messageTitle = value.title;
+    this.messageText = value.text;
+  }
 }

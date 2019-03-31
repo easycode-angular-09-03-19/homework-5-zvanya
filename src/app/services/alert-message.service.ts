@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import { BehaviorSubject } from "rxjs";
+import { IMessage } from "../interfaces/IMessage";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertMessageService {
   
-  private alertMessageEventSource = new BehaviorSubject({});
-  public  alertMessageEventObservableSubject = this.alertMessageEventSource.asObservable();
+  private successMessageEventSource = new BehaviorSubject({});
+  public  successMessageEventObservableSubject = this.successMessageEventSource.asObservable();
+
+  private dangerMessageEventSource = new BehaviorSubject({});
+  public  dangerMessageEventObservableSubject = this.dangerMessageEventSource.asObservable();
   
   constructor() {}
   
-  emitAlertMessage(value: any) {
-    this.alertMessageEventSource.next(value);
+  emitSuccessMessage(value: IMessage) {
+    this.successMessageEventSource.next(value);
   }
+
+  emitDangerMessage(value: IMessage) {
+    this.dangerMessageEventSource.next(value);
+  }
+
 }

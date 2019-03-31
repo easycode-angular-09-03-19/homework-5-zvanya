@@ -52,16 +52,15 @@ export class AlbumItemComponent implements OnInit {
     
     if (res) {
       this.albumService.deleteAlbum(this.item.id).subscribe((data: Album) => {
-        this.albumEvents.emitDeleteAlbum(data.id);
-        //todo: вывод уведомления
+        // На самом деле код из блока complete должен быть в этом блоке,
+        // но т.к. сервер делает фейковые удаления, то код в блоке complete
       }, (err) => {
         console.log(err);
       }, () => {
         this.albumEvents.emitDeleteAlbum(this.item.id);
-        this.alertMessageService.emitAlertMessage({
-          object: 'album',
-          item: this.item,
-          type: 'delete'
+        this.alertMessageService.emitDangerMessage({
+          title: `Удаление. Пользователь: ${this.item.userId}`,
+          text: `Удален альбом ${this.item.title}`
         });
       });
     }
